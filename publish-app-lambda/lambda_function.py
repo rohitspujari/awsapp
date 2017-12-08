@@ -2,6 +2,7 @@ import boto3
 from botocore.client import Config
 import StringIO
 import zipfile
+import mimetypes
 import ConfigParser
 
 def lambda_handler(event, context):
@@ -34,6 +35,7 @@ def lambda_handler(event, context):
                 if artifact['name'] == 'MyAppBuild':
                     location = artifact['location']['s3Location']
         print 'Building App from ' + str(location)
+        print '=========='
             
         
         build_bucket = s3.Bucket(location['bucketName'])
@@ -44,7 +46,14 @@ def lambda_handler(event, context):
         with zipfile.ZipFile(zipped_app) as myzip:
             for f in myzip.namelist():
                 obj = myzip.open(f)
-                publish_bucket.upload_fileobj(obj, f)
+                # Some mimetypes.guess_type is best effort guess. If it's unable to guess the mimetype it will output 'None' which will result into an error.  
+                # print  str({
+                #     'key': f, 'value': mimetypes.guess_type(f)[0] 
+                # })
+                publish_bucket.upload_fileobj(obj, f, 
+                    ExtraArgs={'ContentType': 'application/json' if mimetypes.guess_type(f)[0] == None else mimetypes.guess_type(f)[0] })
+                
+                
                 publish_bucket.Object(f).Acl().put(ACL='public-read')
                 
         print 'Job done!'
