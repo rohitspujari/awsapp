@@ -62,29 +62,28 @@ class SignIn extends Component {
   handleLogin = () => {
     const { username, password } = this.state;
     this.props.signIn(username, password);
-    // console.log(this.state.username);
-    // console.log(this.state.password);
-    // const { username, password } = this.state;
-    // //this.props.loginUser(username, password);
-    // Auth.signIn(username, password)
-    //   .then(user => {
-    //     this.setState({ error: '' });
-    //   })
-    //   .catch(err => this.setState({ error: err }));
   };
 
   handleAuthStateChange = (state, data) => {
+    const history = this.props.history;
     if (state === 'signedIn') {
-      // if (data.constructor.name === 'CognitoUser') {
-      //   this.props.currentUser(data.username);
-      // }
       if (data.email) {
         this.props.federatedSignIn(data.email);
       }
-      this.props.history.push('/resource');
+      //console.log('props', this.props);
+      // console.log('state', this.state);
+
+      if (history.location.state) {
+        const requested_uri = this.props.history.location.state.requested_uri;
+        this.props.history.push(requested_uri);
+      } else {
+        history.push('/');
+      }
     }
     if (state === 'signIn') {
-      this.props.currentUser(null);
+      this.props.signOut();
+      this.props.history.push('/signin');
+      //this.props.history.goBack();
     }
 
     console.log('handleAuthStateChange', data);

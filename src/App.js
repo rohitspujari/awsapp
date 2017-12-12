@@ -7,7 +7,7 @@ import SignIn from './Authentication/SignIn';
 import { Authenticator, withAuthenticator } from 'aws-amplify-react/dist/Auth';
 import Header from './Components/Header';
 import Resource from './Components/Resource';
-import require_authentication from './Authentication/require_authentication';
+import RequireAuth from './Authentication/require_authentication';
 import { Container } from 'semantic-ui-react';
 
 amplify.configure(awsconfig);
@@ -24,9 +24,9 @@ class App extends Component {
         <BrowserRouter>
           <div>
             <Header />
-            <Route exact path="/home" component={Home} />
-            <Route exact path="/resource" component={Resource} />
-            <Route exact path="/friends" component={Friends} />
+            <Route exact path="/" component={Home} />
+            <Route exact path="/resource" component={RequireAuth(Resource)} />
+            <Route exact path="/friends" component={RequireAuth(Friends)} />
             <Route exact path="/signin" component={SignIn} />
           </div>
         </BrowserRouter>

@@ -26,7 +26,7 @@ class Header extends Component {
         <Menu.Item
           name="SignIn"
           onClick={() => {
-            this.props.history.push('/Signin');
+            this.props.history.push('/signin');
             this.setState({ activeItem: 'SignIn' });
           }}
           active={activeItem === 'SignIn'}
@@ -45,7 +45,7 @@ class Header extends Component {
             name="home"
             active={activeItem === 'home'}
             onClick={() => {
-              this.props.history.push('/home');
+              this.props.history.push('/');
               this.setState({ activeItem: 'home' });
             }}
           />
