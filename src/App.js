@@ -1,30 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
 import awsconfig from './aws_config';
 import amplify from 'aws-amplify';
-import { Authenticator } from 'aws-amplify-react/dist/Auth';
+import SignIn from './Authentication/SignIn';
+import { Authenticator, withAuthenticator } from 'aws-amplify-react/dist/Auth';
+import Header from './Components/Header';
+import Resource from './Components/Resource';
+import require_authentication from './Authentication/require_authentication';
+import { Container } from 'semantic-ui-react';
 
 amplify.configure(awsconfig);
 
 class App extends Component {
   render() {
-    const Protected = ({ authState }) => {
-      if (authState !== 'SignedIn') {
-        return null;
-      }
-      return <h2>Protected Resource</h2>;
-    };
+    const Home = () => <h2>Home is the landing page. Please Sign In</h2>;
+    const Friends = () => <h2>Your private friends</h2>;
+    // const Resource = () => <h2>Private Resource</h2>;
 
+    //const authenitcatedResource = require_authentication(Resource);
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React on AWS with CI/CD</h1>
-        </header>
-        <Authenticator federated={awsconfig.federated}>
-          <Protected />
-        </Authenticator>
+      <div className="container">
+        <BrowserRouter>
+          <div>
+            <Header />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/resource" component={Resource} />
+            <Route exact path="/friends" component={Friends} />
+            <Route exact path="/signin" component={SignIn} />
+          </div>
+        </BrowserRouter>
       </div>
     );
   }
