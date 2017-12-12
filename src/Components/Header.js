@@ -11,13 +11,13 @@ class Header extends Component {
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   AuthButton = activeItem => {
-    if (this.props.auth) {
+    if (this.props.auth && this.props.auth.authenticated) {
       return (
         <Menu.Item
           name="SignOut"
           onClick={() => {
             this.props.signOut();
-            this.props.history.push('/home');
+            this.props.history.push('/signin');
           }}
         />
       );
@@ -66,7 +66,12 @@ class Header extends Component {
               this.setState({ activeItem: 'friends' });
             }}
           />
-          <Menu.Menu position="right">{this.AuthButton(activeItem)}</Menu.Menu>
+          <Menu.Menu position="right">
+            <Menu.Item>
+              {this.props.auth ? this.props.auth.currentUser : null}
+            </Menu.Item>
+            {this.AuthButton(activeItem)}
+          </Menu.Menu>
         </Menu>
       </Container>
     );

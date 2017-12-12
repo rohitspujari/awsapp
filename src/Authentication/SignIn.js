@@ -60,33 +60,26 @@ class SignIn extends Component {
   );
 
   handleLogin = () => {
-    console.log(this.state.username);
-    console.log(this.state.password);
     const { username, password } = this.state;
-    //this.props.loginUser(username, password);
-    Auth.signIn(username, password)
-      .then(user => {
-        this.setState({ error: '' });
-      })
-      .catch(err => this.setState({ error: err }));
+    this.props.signIn(username, password);
+    // console.log(this.state.username);
+    // console.log(this.state.password);
+    // const { username, password } = this.state;
+    // //this.props.loginUser(username, password);
+    // Auth.signIn(username, password)
+    //   .then(user => {
+    //     this.setState({ error: '' });
+    //   })
+    //   .catch(err => this.setState({ error: err }));
   };
-
-  handleSignOut = () => {
-    Auth.signOut()
-      .then(data => null)
-      .catch(err => null);
-  };
-
-  componentWillMount() {}
 
   handleAuthStateChange = (state, data) => {
-    console.log('props', this.props);
     if (state === 'signedIn') {
-      if (data.constructor.name === 'CognitoUser') {
-        this.props.currentUser(data.username);
-      }
+      // if (data.constructor.name === 'CognitoUser') {
+      //   this.props.currentUser(data.username);
+      // }
       if (data.email) {
-        this.props.currentUser(data.email);
+        this.props.federatedSignIn(data.email);
       }
       this.props.history.push('/resource');
     }
@@ -94,10 +87,7 @@ class SignIn extends Component {
       this.props.currentUser(null);
     }
 
-    console.log('redux state', this.props.auth);
-    console.log(state);
-
-    console.log('authstate-change', data);
+    console.log('handleAuthStateChange', data);
   };
 
   render() {
@@ -126,7 +116,9 @@ class SignIn extends Component {
                   onChange={e => this.setState({ password: e.target.value })}
                 />
               </Form.Field>
-              {this.state.error ? this.displayError(this.state.error) : null}
+              {this.props.auth && this.props.auth.loginError
+                ? this.displayError(this.props.auth.loginError)
+                : null}
               <Form.Field>
                 <Button primary fluid onClick={this.handleLogin}>
                   Login
@@ -149,7 +141,6 @@ class SignIn extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state);
   return {
     auth: state.auth
   };
