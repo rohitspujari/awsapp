@@ -4,6 +4,7 @@ import './App.css';
 import awsconfig from './aws_config';
 import amplify from 'aws-amplify';
 import SignIn from './Authentication/SignIn';
+import SignUp from './Authentication/SignUp';
 import { Authenticator, withAuthenticator } from 'aws-amplify-react/dist/Auth';
 import Header from './Components/Header';
 import Resource from './Components/Resource';
@@ -28,6 +29,7 @@ class App extends Component {
             <Route exact path="/resource" component={RequireAuth(Resource)} />
             <Route exact path="/friends" component={RequireAuth(Friends)} />
             <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/signup" component={SignUp} />
           </div>
         </BrowserRouter>
       </div>
