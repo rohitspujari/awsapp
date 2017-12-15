@@ -20,8 +20,7 @@ class SignUp extends Component {
     username: '',
     email: '',
     password: '',
-    confirmCode: '',
-    isUserConfirmingCode: false
+    confirmCode: ''
   };
 
   getSignUpCancelButtons = () => {
@@ -35,7 +34,6 @@ class SignUp extends Component {
               secondary
               fluid
               onClick={() => {
-                this.setState({ isUserConfirmingCode: false });
                 this.props.history.push('/signin');
               }}
             >
@@ -48,8 +46,6 @@ class SignUp extends Component {
               primary
               fluid
               onClick={() => {
-                //this.props.testAction();
-
                 this.props.signUp(username, password, email);
               }}
             >
@@ -62,6 +58,8 @@ class SignUp extends Component {
   };
 
   getConfirmCodePrompt = auth => {
+    const { username, password, code } = this.state;
+    const { history } = this.props;
     if (_.has(auth, 'userConfirmed') && !auth.userConfirmed) {
       return (
         <div>
@@ -76,10 +74,7 @@ class SignUp extends Component {
               <button
                 class="ui button primary"
                 onClick={() => {
-                  this.props.confirmSignUp(
-                    this.state.username,
-                    this.state.code
-                  );
+                  this.props.confirmSignUp(username, password, code, history);
                 }}
               >
                 Confirm
@@ -100,17 +95,16 @@ class SignUp extends Component {
   };
 
   render() {
-    const { auth, history } = this.props;
-    const { username, password } = this.state;
+    const { auth } = this.props;
 
-    if (_.has(auth, 'username') && _.has(auth, 'username')) {
-      history.push('/');
-    }
+    // if (_.has(auth, 'username') && _.has(auth, 'username')) {
+    //   history.push('/');
+    // }
 
-    if (_.has(auth, 'userConfirmMessage') && auth.userConfirmMessage) {
-      this.props.signInAfterSignUp(username, password, history);
-      return null;
-    }
+    // if (_.has(auth, 'userConfirmMessage') && auth.userConfirmMessage) {
+    //   this.props.signInAfterSignUp(username, password, history);
+    //   return null;
+    // }
     return (
       <Container>
         <Segment>

@@ -4,9 +4,7 @@ import {
   SIGN_IN,
   SIGN_UP,
   CONFIRM_SIGN_UP,
-  AUTH_ERROR,
-  TEST,
-  TEST2
+  AUTH_ERROR
 } from './types';
 import { Auth } from 'aws-amplify';
 
@@ -50,7 +48,7 @@ export const signedIn = user => dispatch => {
     });
   }
 };
-//In use
+
 export const signOut = () => dispatch => {
   Auth.signOut()
     .then(data => {
@@ -82,14 +80,24 @@ export const signUp = (username, password, email, phone) => dispatch => {
       });
     });
 };
-export const confirmSignUp = (username, code) => dispatch => {
+export const confirmSignUp = (
+  username,
+  password,
+  code,
+  history
+) => dispatch => {
   Auth.confirmSignUp(username, code)
     .then(data => {
-      console.log(data);
-      dispatch({
-        type: CONFIRM_SIGN_UP,
-        payload: data
+      //If SignUp code is valid
+      Auth.signIn(username, password).then(user => {
+        // Signin the newly created user
+        dispatch({
+          type: SIGN_IN,
+          payload: data
+        });
       });
+
+      history.push('/'); //Direct user to home page
     })
     .catch(err => {
       console.log(err);
@@ -104,24 +112,9 @@ export const confirmSignUp = (username, code) => dispatch => {
     });
 };
 
-//In Use
 export const authError = error => dispatch => {
   dispatch({
     type: AUTH_ERROR,
     payload: error
-  });
-};
-
-export const testAction = () => async dispatch => {
-  dispatch({
-    type: TEST,
-    payload: 'myaction'
-  });
-};
-
-export const testAction2 = () => async dispatch => {
-  dispatch({
-    type: TEST2,
-    payload: 'myaction2'
   });
 };
