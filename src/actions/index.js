@@ -1,17 +1,28 @@
-import { FEDERATED_SIGN_IN, SIGN_OUT, SIGN_IN, AUTH_ERROR } from './types';
+import {
+  FEDERATED_SIGN_IN,
+  SIGN_OUT,
+  SIGN_IN,
+  SIGN_UP,
+  CONFIRM_SIGN_UP,
+  AUTH_ERROR,
+  TEST,
+  TEST2
+} from './types';
 import { Auth } from 'aws-amplify';
 
-export const signIn = (username, password) => async dispatch => {
+export const signInAfterSignUp = (
+  username,
+  password,
+  history
+) => async dispatch => {
   try {
-    const user = await Auth.signIn(username, password);
+    const user = await Auth.signIn(username, password, history);
+
     dispatch({
       type: SIGN_IN,
-      payload: {
-        authenticated: true,
-        currentUser: user.username,
-        loginError: null
-      }
+      payload: user
     });
+    history.push('/signin');
   } catch (err) {
     let error = err;
     if (err.code) {
@@ -20,44 +31,97 @@ export const signIn = (username, password) => async dispatch => {
     console.log(error);
     dispatch({
       type: AUTH_ERROR,
-      payload: {
-        authenticated: false,
-        currentUser: null,
-        loginError: error
-      }
+      payload: error
     });
-    // dispatch({
-    //   type: AUTH_ERROR,
-    //   payload: {
-    //     authenticated: false,
-    //     currentUser: null,
-    //     loginError: error
-    //   }
-    // });
   }
 };
 
-export const federatedSignIn = user => async dispatch => {
-  dispatch({
-    type: FEDERATED_SIGN_IN,
-    payload: {
-      authenticated: true,
-      currentUser: user,
-      loginError: null
-    }
-  });
+//The user is already signed-in from previous session
+export const signedIn = user => dispatch => {
+  if (user.name) {
+    dispatch({
+      type: FEDERATED_SIGN_IN,
+      payload: user
+    });
+  } else {
+    dispatch({
+      type: SIGN_IN,
+      payload: user
+    });
+  }
 };
-export const signOut = () => async dispatch => {
+//In use
+export const signOut = () => dispatch => {
   Auth.signOut()
     .then(data => {
       dispatch({
         type: SIGN_OUT,
-        payload: {
-          authenticated: false,
-          currentUser: null,
-          loginError: null
-        }
+        payload: null
       });
     })
     .catch(err => null);
+};
+
+export const signUp = (username, password, email, phone) => dispatch => {
+  Auth.signUp(username, password, email, phone)
+    .then(user => {
+      //console.log(data);
+      dispatch({
+        type: SIGN_UP,
+        payload: user
+      });
+    })
+    .catch(err => {
+      let error = err;
+      if (err.code) {
+        error = err.message;
+      }
+      dispatch({
+        type: AUTH_ERROR,
+        payload: error
+      });
+    });
+};
+export const confirmSignUp = (username, code) => dispatch => {
+  Auth.confirmSignUp(username, code)
+    .then(data => {
+      console.log(data);
+      dispatch({
+        type: CONFIRM_SIGN_UP,
+        payload: data
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      let error = err;
+      if (err.code) {
+        error = err.message;
+      }
+      dispatch({
+        type: CONFIRM_SIGN_UP,
+        payload: error
+      });
+    });
+};
+
+//In Use
+export const authError = error => dispatch => {
+  dispatch({
+    type: AUTH_ERROR,
+    payload: error
+  });
+};
+
+export const testAction = () => async dispatch => {
+  dispatch({
+    type: TEST,
+    payload: 'myaction'
+  });
+};
+
+export const testAction2 = () => async dispatch => {
+  dispatch({
+    type: TEST2,
+    payload: 'myaction2'
+  });
 };

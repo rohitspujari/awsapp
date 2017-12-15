@@ -10,6 +10,7 @@ import {
   Input
 } from 'semantic-ui-react';
 import { Auth } from 'aws-amplify';
+import { AmplifyTheme } from 'aws-amplify-react';
 
 import React, { Component } from 'react';
 import * as actions from '../actions';
@@ -18,12 +19,18 @@ import { Link, withRouter } from 'react-router-dom';
 
 import { Authenticator } from 'aws-amplify-react/dist/Auth';
 import { withFederated } from 'aws-amplify-react';
+import _ from 'lodash';
 
 const federated = {
   google_client_id:
     '277830869306-6qj1p3mep3utio2c9a3lgudfgga9sd2j.apps.googleusercontent.com',
   facebook_app_id: ''
 };
+
+const MySectionHeader = Object.assign({}, AmplifyTheme.container, {
+  textAlign: 'left'
+});
+const MyTheme = Object.assign({}, AmplifyTheme, { container: MySectionHeader });
 
 const Buttons = props => {
   return (
@@ -54,28 +61,26 @@ class SignIn extends Component {
     };
   }
 
-  displayError = error => (
-    <Form.Field>
-      <Label>{error}</Label>
-    </Form.Field>
-  );
-
   getLoginSignUpButtons = () => {
     return (
       <Grid columns={2}>
         <Grid.Row>
           <Grid.Column>
-            <Button primary fluid onClick={this.handleLogin}>
-              Login
+            <Button primary fluid onClick={this.handleSignIn}>
+              <i class="checkmark icon" />
+              Sign In
             </Button>
           </Grid.Column>
           <Grid.Column>
             <Button
               secondary
               fluid
-              onClick={() => this.props.history.push('/signup')}
+              onClick={() => {
+                this.props.history.push('/signup');
+              }}
             >
-              Sign Up
+              <i class="add user icon" />
+              New User
             </Button>
           </Grid.Column>
         </Grid.Row>
@@ -83,20 +88,25 @@ class SignIn extends Component {
     );
   };
 
-  handleLogin = () => {
+  handleSignIn = async () => {
     const { username, password } = this.state;
-    this.props.signIn(username, password);
+    try {
+      await Auth.signIn(username, password);
+    } catch (err) {
+      let error = err;
+      if (err.code) {
+        error = err.message;
+      }
+      this.props.authError(error);
+    }
   };
 
   handleAuthStateChange = (state, data) => {
-    const history = this.props.history;
+    const { history } = this.props;
     if (state === 'signedIn') {
-      if (data.email) {
-        this.props.federatedSignIn(data.email);
-      }
-      //console.log('props', this.props);
-      // console.log('state', this.state);
+      this.props.signedIn(data);
 
+      //Get Requested URI - Useful when used with require_authentication HOC
       if (history.location.state) {
         const requested_uri = this.props.history.location.state.requested_uri;
         this.props.history.push(requested_uri);
@@ -107,16 +117,17 @@ class SignIn extends Component {
     if (state === 'signIn') {
       this.props.signOut();
       this.props.history.push('/signin');
-      //this.props.history.goBack();
     }
 
-    console.log('handleAuthStateChange', data);
+    //console.log('handleAuthStateChange', data);
   };
 
   render() {
     const Federated = withFederated(Buttons);
+    const { auth } = this.props;
     return (
       <Authenticator
+        theme={MyTheme}
         hideDefault={true}
         onStateChange={this.handleAuthStateChange}
       >
@@ -143,9 +154,9 @@ class SignIn extends Component {
                   />
                 </Input>
               </Form.Field>
-              {this.props.auth && this.props.auth.loginError
-                ? this.displayError(this.props.auth.loginError)
-                : null}
+              <Form.Field>
+                {_.has(auth, 'error') ? <Label>{auth.error}</Label> : null}
+              </Form.Field>
               <Form.Field>{this.getLoginSignUpButtons()}</Form.Field>
               <Form.Field>
                 <Link to={'/home'}>Forgot Password?</Link>
@@ -163,6 +174,7 @@ class SignIn extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log(state);
   return {
     auth: state.auth
   };

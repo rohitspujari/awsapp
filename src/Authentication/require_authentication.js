@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import _ from 'lodash';
 
 export default function(ComposedComponent) {
   class Authentication extends Component {
     componentWillMount() {
-      //console.log(this.props.history.location.pathname);
-
-      if (!this.props.auth || !this.props.auth.authenticated) {
-        this.props.history.push('/signin', {
-          requested_uri: this.props.history.location.pathname
-        });
-      }
+      this.route();
     }
 
     componentWillUpdate(nextProps) {
-      if (!this.props.auth || !this.props.auth.authenticated) {
+      this.route();
+    }
+
+    route = () => {
+      if (
+        !_.has(this.props.auth, 'username') &&
+        !_.has(this.props.auth, 'name')
+      ) {
         this.props.history.push('/signin', {
           requested_uri: this.props.history.location.pathname
         });
       }
-    }
+    };
 
     render() {
       return <ComposedComponent {...this.props} />;

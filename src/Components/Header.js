@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Menu, Segment, Container } from 'semantic-ui-react';
-import { Link, withRouter } from 'react-router-dom';
+import { Menu, Container } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
-import { Auth } from 'aws-amplify';
+
+import _ from 'lodash';
 
 class Header extends Component {
   state = { activeItem: 'home' };
@@ -11,7 +12,7 @@ class Header extends Component {
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   AuthButton = activeItem => {
-    if (this.props.auth && this.props.auth.authenticated) {
+    if (_.has(this.props, 'auth.name') || _.has(this.props, 'auth.username')) {
       return (
         <Menu.Item
           name="SignOut"
@@ -68,7 +69,9 @@ class Header extends Component {
           />
           <Menu.Menu position="right">
             <Menu.Item>
-              {this.props.auth ? this.props.auth.currentUser : null}
+              {this.props.auth
+                ? this.props.auth.name || this.props.auth.username
+                : null}
             </Menu.Item>
             {this.AuthButton(activeItem)}
           </Menu.Menu>

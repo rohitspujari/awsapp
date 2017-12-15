@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
+
+import _ from 'lodash';
 import {
   Segment,
   Icon,
@@ -13,24 +17,25 @@ import {
 
 class SignUp extends Component {
   state = {
+    username: '',
     email: '',
     password: '',
-    confirmPassword: '',
     confirmCode: '',
-    isUserConfirmingCode: false,
-    message: null
+    isUserConfirmingCode: false
   };
 
   getSignUpCancelButtons = () => {
+    const { username, password, email } = this.state;
+    const { auth } = this.props;
     return (
       <Grid columns={2}>
         <Grid.Row>
           <Grid.Column>
             <Button
-              primary
+              secondary
               fluid
               onClick={() => {
-                this.setState({ isUserConfirmingCode: false, message: null });
+                this.setState({ isUserConfirmingCode: false });
                 this.props.history.push('/signin');
               }}
             >
@@ -39,15 +44,13 @@ class SignUp extends Component {
           </Grid.Column>
           <Grid.Column>
             <Button
-              disabled={this.state.isUserConfirmingCode}
+              disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
               primary
               fluid
               onClick={() => {
-                //this.handleSignUp(); TODO
-                this.setState({
-                  isUserConfirmingCode: true,
-                  message: 'Please check your email for the code'
-                });
+                //this.props.testAction();
+
+                this.props.signUp(username, password, email);
               }}
             >
               Sign Up
@@ -58,47 +61,81 @@ class SignUp extends Component {
     );
   };
 
-  getConfirmCodePrompt = () => {
-    if (this.state.isUserConfirmingCode) {
+  getConfirmCodePrompt = auth => {
+    if (_.has(auth, 'userConfirmed') && !auth.userConfirmed) {
       return (
-        <div class="ui action input">
-          <input type="text" placeholder="Code" />
-          <button
-            class="ui button primary"
-            role="button"
-            onClick={() => {
-              console.log('Code Confirmed');
-            }}
-          >
-            Confirm
-          </button>
+        <div>
+          <Form.Field>
+            <div class="ui action input">
+              <input
+                type="text"
+                placeholder="Code"
+                value={this.state.code}
+                onChange={e => this.setState({ code: e.target.value })}
+              />
+              <button
+                class="ui button primary"
+                onClick={() => {
+                  this.props.confirmSignUp(
+                    this.state.username,
+                    this.state.code
+                  );
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </Form.Field>
+          <Form.Field>
+            <Label>{'Please check your email for the code'}</Label>
+          </Form.Field>
+          <Form.Field>
+            {_.has(auth, 'userConfirmMessage') ? (
+              <Label>{auth.userConfirmMessage}</Label>
+            ) : null}
+          </Form.Field>
         </div>
       );
     }
   };
 
-  getMessageLabel = () => {
-    if (this.state.message) {
-      return <Label>{this.state.message}</Label>;
-    }
-  };
   render() {
+    const { auth, history } = this.props;
+    const { username, password } = this.state;
+
+    if (_.has(auth, 'username') && _.has(auth, 'username')) {
+      history.push('/');
+    }
+
+    if (_.has(auth, 'userConfirmMessage') && auth.userConfirmMessage) {
+      this.props.signInAfterSignUp(username, password, history);
+      return null;
+    }
     return (
       <Container>
         <Segment>
           <Form>
             <Form.Field>
-              <Input iconPosition="left" placeholder="E-mail Address">
+              <Input
+                iconPosition="left"
+                placeholder="Username"
+                disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
+              >
                 <Icon name="user" />
                 <input
                   type="text"
-                  value={this.state.email}
-                  onChange={e => this.setState({ email: e.target.value })}
+                  value={this.state.username}
+                  onChange={e => this.setState({ username: e.target.value })}
                 />
               </Input>
             </Form.Field>
+
             <Form.Field>
-              <Input iconPosition="left" placeholder="Password">
+              <Input
+                iconPosition="left"
+                placeholder="Password"
+                disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
+              >
                 <Icon name="lock" />
                 <input
                   type="password"
@@ -108,20 +145,24 @@ class SignUp extends Component {
               </Input>
             </Form.Field>
             <Form.Field>
-              <Input iconPosition="left" placeholder="Confirm Password">
-                <Icon name="lock" />
+              <Input
+                iconPosition="left"
+                placeholder="E-mail Address"
+                disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
+              >
+                <Icon name="mail icon" />
                 <input
-                  type="password"
-                  value={this.state.confirmPassword}
-                  onChange={e =>
-                    this.setState({ confirmPassword: e.target.value })
-                  }
+                  type="text"
+                  value={this.state.email}
+                  onChange={e => this.setState({ email: e.target.value })}
                 />
               </Input>
             </Form.Field>
-            <Form.Field>{this.getMessageLabel()}</Form.Field>
+            <Form.Field>
+              {_.has(auth, 'error') ? <Label>{auth.error}</Label> : null}
+            </Form.Field>
+            <Form.Field>{this.getConfirmCodePrompt(auth)}</Form.Field>
             <Form.Field>{this.getSignUpCancelButtons()}</Form.Field>
-            <Form.Field>{this.getConfirmCodePrompt()}</Form.Field>
           </Form>
         </Segment>
       </Container>
@@ -129,4 +170,11 @@ class SignUp extends Component {
   }
 }
 
-export default withRouter(SignUp);
+function mapStateToProps(state) {
+  console.log(state);
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps, actions)(withRouter(SignUp));
