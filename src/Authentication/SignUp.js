@@ -97,14 +97,6 @@ class SignUp extends Component {
   render() {
     const { auth } = this.props;
 
-    // if (_.has(auth, 'username') && _.has(auth, 'username')) {
-    //   history.push('/');
-    // }
-
-    // if (_.has(auth, 'userConfirmMessage') && auth.userConfirmMessage) {
-    //   this.props.signInAfterSignUp(username, password, history);
-    //   return null;
-    // }
     return (
       <Container>
         <Segment>

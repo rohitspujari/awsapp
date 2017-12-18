@@ -8,33 +8,6 @@ import {
 } from './types';
 import { Auth } from 'aws-amplify';
 
-export const signInAfterSignUp = (
-  username,
-  password,
-  history
-) => async dispatch => {
-  try {
-    const user = await Auth.signIn(username, password, history);
-
-    dispatch({
-      type: SIGN_IN,
-      payload: user
-    });
-    history.push('/signin');
-  } catch (err) {
-    let error = err;
-    if (err.code) {
-      error = err.message;
-    }
-    console.log(error);
-    dispatch({
-      type: AUTH_ERROR,
-      payload: error
-    });
-  }
-};
-
-//The user is already signed-in from previous session
 export const signedIn = user => dispatch => {
   if (user.name) {
     dispatch({
@@ -80,6 +53,7 @@ export const signUp = (username, password, email, phone) => dispatch => {
       });
     });
 };
+
 export const confirmSignUp = (
   username,
   password,
@@ -97,7 +71,7 @@ export const confirmSignUp = (
         });
       });
 
-      history.push('/'); //Direct user to home page
+      history.push('/signin'); //Direct user to signin page which will by default direct to home page
     })
     .catch(err => {
       console.log(err);

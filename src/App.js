@@ -9,12 +9,13 @@ import SignUp from './Authentication/SignUp';
 import Header from './Components/Header';
 import Resource from './Components/Resource';
 import RequireAuth from './Authentication/require_authentication';
+import Home from './Components/Home';
 
 amplify.configure(awsconfig);
 
 class App extends Component {
   render() {
-    const Home = () => <h2>Home is the landing page. Please Sign In</h2>;
+    // const Home = () => <h2>Home is the landing page. Please Sign In</h2>;
     const Friends = () => <h2>Your private friends</h2>;
 
     return (
@@ -23,7 +24,7 @@ class App extends Component {
           <div>
             <Header />
             <Route exact path="/" component={Home} />
-            <Route exact path="/resource" component={RequireAuth(Resource)} />
+            <Route exact path="/resource" component={Resource} />
             <Route exact path="/friends" component={RequireAuth(Friends)} />
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />

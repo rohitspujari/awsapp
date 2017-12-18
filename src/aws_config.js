@@ -1,6 +1,7 @@
 const awsconfig = {
   Auth: {
-    identityPoolId: 'us-east-1:84e1a62a-ffab-4453-8543-3e0c63e8d104', //REQUIRED - Amazon Cognito Identity Pool ID
+    //r_awsapp_identity_pool
+    identityPoolId: 'us-east-1:84078cba-600e-48e7-96ec-5d1860927264', //REQUIRED - Amazon Cognito Identity Pool ID
     region: 'us-east-1', // REQUIRED - Amazon Cognito Region
     userPoolId: 'us-east-1_CzKaWZXb5', //OPTIONAL - Amazon Cognito User Pool ID
     userPoolWebClientId: '1sg472r4rtesq50k589i3crdcq' //OPTIONAL - Amazon Cognito Web Client ID
@@ -9,6 +10,14 @@ const awsconfig = {
     google_client_id:
       '277830869306-6qj1p3mep3utio2c9a3lgudfgga9sd2j.apps.googleusercontent.com'
     // facebook_app_id: ''
+  },
+  API: {
+    endpoints: [
+      {
+        name: 'Friends',
+        endpoint: 'https://2lu91un42e.execute-api.us-east-1.amazonaws.com'
+      }
+    ]
   }
 };
 

@@ -119,7 +119,7 @@ class SignIn extends Component {
       this.props.history.push('/signin');
     }
 
-    //console.log('handleAuthStateChange', data);
+    console.log('handleAuthStateChange', state, data);
   };
 
   render() {

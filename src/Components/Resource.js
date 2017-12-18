@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Button, Container } from 'semantic-ui-react';
+import { Auth, API } from 'aws-amplify';
 
 export class Resource extends Component {
   constructor(props) {
@@ -13,8 +15,34 @@ export class Resource extends Component {
     return;
   };
 
+  handleClick = Auth => {
+    console.log('I am clicked');
+    console.log(Auth);
+    const data = this.getData()
+      .then(data => console.log(data))
+      .catch(e => console.log(e));
+  };
+
+  getData = async () => {
+    let apiName = 'Friends';
+    let path = '/dev/api/friends';
+    let myInit = {
+      // OPTIONAL
+      //headers: { 'Access-Control-Allow-Origin': '*' } // OPTIONAL
+    };
+    return await API.get(apiName, path, myInit);
+  };
+
   render() {
-    return <h2>Your private resource</h2>;
+    return (
+      <Container>
+        <div>
+          <Button primary onClick={() => this.handleClick(Auth, API)}>
+            Invoke API
+          </Button>
+        </div>
+      </Container>
+    );
   }
 }
 
