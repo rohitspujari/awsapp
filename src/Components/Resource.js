@@ -18,6 +18,8 @@ export class Resource extends Component {
   handleClick = Auth => {
     console.log('I am clicked');
     console.log(Auth);
+
+    Auth.currentAuthenticatedUser().then(d => console.log('tesing', d));
     const data = this.getData()
       .then(data => console.log(data))
       .catch(e => console.log(e));

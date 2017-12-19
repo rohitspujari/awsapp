@@ -10,6 +10,14 @@ import _ from 'lodash';
 class Header extends Component {
   state = { activeItem: 'home' };
 
+  componentWillMount() {
+    Auth.currentAuthenticatedUser()
+      .then(user => {
+        this.props.signedIn(user);
+      })
+      .catch(e => console.log(e));
+  }
+
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   AuthButton = activeItem => {
