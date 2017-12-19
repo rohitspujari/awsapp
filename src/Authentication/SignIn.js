@@ -7,7 +7,8 @@ import {
   Grid,
   Label,
   Container,
-  Input
+  Input,
+  Header
 } from 'semantic-ui-react';
 import { Auth } from 'aws-amplify';
 import { AmplifyTheme } from 'aws-amplify-react';
@@ -37,12 +38,12 @@ const Buttons = props => {
     <Grid columns={2}>
       <Grid.Row>
         <Grid.Column>
-          <Button fluid color="google plus" onClick={props.googleSignIn}>
-            <Icon name="google plus" /> Google Plus
+          <Button basic fluid color="google" onClick={props.googleSignIn}>
+            <Icon name="google plus" /> Google
           </Button>
         </Grid.Column>
         <Grid.Column>
-          <Button fluid color="facebook" onClick={props.facebookSignIn}>
+          <Button basic fluid color="facebook" onClick={props.facebookSignIn}>
             <Icon name="facebook" /> Facebook
           </Button>
         </Grid.Column>
@@ -66,14 +67,14 @@ class SignIn extends Component {
       <Grid columns={2}>
         <Grid.Row>
           <Grid.Column>
-            <Button primary fluid onClick={this.handleSignIn}>
+            <Button basic fluid onClick={this.handleSignIn}>
               <i class="checkmark icon" />
               Sign In
             </Button>
           </Grid.Column>
           <Grid.Column>
             <Button
-              secondary
+              basic
               fluid
               onClick={() => {
                 this.props.history.push('/signup');
@@ -122,7 +123,7 @@ class SignIn extends Component {
     console.log('handleAuthStateChange', state, data);
   };
 
-  render() {
+  getForm = () => {
     const Federated = withFederated(Buttons);
     const { auth } = this.props;
     return (
@@ -131,44 +132,66 @@ class SignIn extends Component {
         hideDefault={true}
         onStateChange={this.handleAuthStateChange}
       >
-        <Container>
-          <Segment>
-            <Form>
-              <Form.Field>
-                <Input iconPosition="left" placeholder="E-mail Address">
-                  <Icon name="user" />
-                  <input
-                    type="text"
-                    value={this.state.username}
-                    onChange={e => this.setState({ username: e.target.value })}
-                  />
-                </Input>
-              </Form.Field>
-              <Form.Field>
-                <Input iconPosition="left" placeholder="Password">
-                  <Icon name="lock" />
-                  <input
-                    type="password"
-                    value={this.state.password}
-                    onChange={e => this.setState({ password: e.target.value })}
-                  />
-                </Input>
-              </Form.Field>
-              <Form.Field>
-                {_.has(auth, 'error') ? <Label>{auth.error}</Label> : null}
-              </Form.Field>
-              <Form.Field>{this.getLoginSignUpButtons()}</Form.Field>
-              <Form.Field>
-                <Link to={'/home'}>Forgot Password?</Link>
-              </Form.Field>
-              <Divider />
-              <Form.Field>
-                <Federated federated={federated} />
-              </Form.Field>
-            </Form>
-          </Segment>
-        </Container>
+        <Grid>
+          <Grid.Row centered>
+            <Grid.Column mobile="16" tablet="10" computer="8">
+              <Segment>
+                <Form>
+                  <Form.Field>
+                    <Input iconPosition="left" placeholder="Username">
+                      <Icon name="user" />
+                      <input
+                        type="text"
+                        value={this.state.username}
+                        onChange={e =>
+                          this.setState({ username: e.target.value })
+                        }
+                      />
+                    </Input>
+                  </Form.Field>
+                  <Form.Field>
+                    <Input iconPosition="left" placeholder="Password">
+                      <Icon name="lock" />
+                      <input
+                        type="password"
+                        value={this.state.password}
+                        onChange={e =>
+                          this.setState({ password: e.target.value })
+                        }
+                      />
+                    </Input>
+                  </Form.Field>
+                  <Form.Field>
+                    {_.has(auth, 'error') ? <Label>{auth.error}</Label> : null}
+                  </Form.Field>
+                  <Form.Field>{this.getLoginSignUpButtons()}</Form.Field>
+                  <Form.Field>
+                    <Link color="black" to={'/home'}>
+                      Forgot Password?
+                    </Link>
+                  </Form.Field>
+                  <Divider />
+                  <Form.Field>
+                    <Federated federated={federated} />
+                  </Form.Field>
+                </Form>
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Authenticator>
+    );
+  };
+
+  render() {
+    return (
+      <div style={{ marginTop: 25 }}>
+        <Header as="h2" icon textAlign="center">
+          <Icon name="users" circular />
+          <Header.Content>RLabs</Header.Content>
+        </Header>
+        {this.getForm()}
+      </div>
     );
   }
 }

@@ -6,6 +6,7 @@ import * as actions from '../actions';
 import _ from 'lodash';
 import {
   Segment,
+  Header,
   Icon,
   Form,
   Container,
@@ -31,24 +32,26 @@ class SignUp extends Component {
         <Grid.Row>
           <Grid.Column>
             <Button
-              secondary
+              basic
               fluid
               onClick={() => {
                 this.props.history.push('/signin');
               }}
             >
+              <i class="remove icon" />
               Cancel
             </Button>
           </Grid.Column>
           <Grid.Column>
             <Button
               disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
-              primary
+              basic
               fluid
               onClick={() => {
                 this.props.signUp(username, password, email);
               }}
             >
+              <i class="add user icon" />
               Sign Up
             </Button>
           </Grid.Column>
@@ -71,14 +74,15 @@ class SignUp extends Component {
                 value={this.state.code}
                 onChange={e => this.setState({ code: e.target.value })}
               />
-              <button
-                class="ui button primary"
+              <Button
+                basic
                 onClick={() => {
                   this.props.confirmSignUp(username, password, code, history);
                 }}
               >
+                <i class="checkmark icon" />
                 Confirm
-              </button>
+              </Button>
             </div>
           </Form.Field>
           <Form.Field>
@@ -94,64 +98,90 @@ class SignUp extends Component {
     }
   };
 
-  render() {
+  getForm = () => {
     const { auth } = this.props;
 
     return (
-      <Container>
-        <Segment>
-          <Form>
-            <Form.Field>
-              <Input
-                iconPosition="left"
-                placeholder="Username"
-                disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
-              >
-                <Icon name="user" />
-                <input
-                  type="text"
-                  value={this.state.username}
-                  onChange={e => this.setState({ username: e.target.value })}
-                />
-              </Input>
-            </Form.Field>
+      <Grid>
+        <Grid.Row centered>
+          <Grid.Column mobile="16" tablet="10" computer="8">
+            <Segment>
+              <Form>
+                <Form.Field>
+                  <Input
+                    iconPosition="left"
+                    placeholder="Username"
+                    disabled={
+                      _.has(auth, 'userConfirmed') && !auth.userConfirmed
+                    }
+                  >
+                    <Icon name="user" />
+                    <input
+                      type="text"
+                      value={this.state.username}
+                      onChange={e =>
+                        this.setState({ username: e.target.value })
+                      }
+                    />
+                  </Input>
+                </Form.Field>
 
-            <Form.Field>
-              <Input
-                iconPosition="left"
-                placeholder="Password"
-                disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
-              >
-                <Icon name="lock" />
-                <input
-                  type="password"
-                  value={this.state.password}
-                  onChange={e => this.setState({ password: e.target.value })}
-                />
-              </Input>
-            </Form.Field>
-            <Form.Field>
-              <Input
-                iconPosition="left"
-                placeholder="E-mail Address"
-                disabled={_.has(auth, 'userConfirmed') && !auth.userConfirmed}
-              >
-                <Icon name="mail icon" />
-                <input
-                  type="text"
-                  value={this.state.email}
-                  onChange={e => this.setState({ email: e.target.value })}
-                />
-              </Input>
-            </Form.Field>
-            <Form.Field>
-              {_.has(auth, 'error') ? <Label>{auth.error}</Label> : null}
-            </Form.Field>
-            <Form.Field>{this.getConfirmCodePrompt(auth)}</Form.Field>
-            <Form.Field>{this.getSignUpCancelButtons()}</Form.Field>
-          </Form>
-        </Segment>
-      </Container>
+                <Form.Field>
+                  <Input
+                    iconPosition="left"
+                    placeholder="Password"
+                    disabled={
+                      _.has(auth, 'userConfirmed') && !auth.userConfirmed
+                    }
+                  >
+                    <Icon name="lock" />
+                    <input
+                      type="password"
+                      value={this.state.password}
+                      onChange={e =>
+                        this.setState({ password: e.target.value })
+                      }
+                    />
+                  </Input>
+                </Form.Field>
+                <Form.Field>
+                  <Input
+                    iconPosition="left"
+                    placeholder="E-mail Address"
+                    disabled={
+                      _.has(auth, 'userConfirmed') && !auth.userConfirmed
+                    }
+                  >
+                    <Icon name="mail icon" />
+                    <input
+                      type="text"
+                      value={this.state.email}
+                      onChange={e => this.setState({ email: e.target.value })}
+                    />
+                  </Input>
+                </Form.Field>
+                <Form.Field>
+                  {_.has(auth, 'error') ? <Label>{auth.error}</Label> : null}
+                </Form.Field>
+                <Form.Field>{this.getConfirmCodePrompt(auth)}</Form.Field>
+                <Form.Field>{this.getSignUpCancelButtons()}</Form.Field>
+              </Form>
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
+  };
+
+  render() {
+    return (
+      <div style={{ marginTop: 25 }}>
+        <Header as="h2" icon textAlign="center">
+          <Icon name="users" circular />
+          <Header.Content>RLabs</Header.Content>
+        </Header>
+        {this.getForm()}
+      </div>
     );
   }
 }

@@ -10,6 +10,7 @@ import Header from './Components/Header';
 import Resource from './Components/Resource';
 import RequireAuth from './Authentication/require_authentication';
 import Home from './Components/Home';
+import { Container } from 'semantic-ui-react';
 
 amplify.configure(awsconfig);
 
@@ -19,7 +20,7 @@ class App extends Component {
     const Friends = () => <h2>Your private friends</h2>;
 
     return (
-      <div className="container">
+      <Container>
         <BrowserRouter>
           <div>
             <Header />
@@ -30,7 +31,7 @@ class App extends Component {
             <Route exact path="/signup" component={SignUp} />
           </div>
         </BrowserRouter>
-      </div>
+      </Container>
     );
   }
 }
