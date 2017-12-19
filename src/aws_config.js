@@ -8,8 +8,8 @@ const awsconfig = {
   },
   federated: {
     google_client_id:
-      '277830869306-6qj1p3mep3utio2c9a3lgudfgga9sd2j.apps.googleusercontent.com'
-    // facebook_app_id: ''
+      '277830869306-6qj1p3mep3utio2c9a3lgudfgga9sd2j.apps.googleusercontent.com',
+    facebook_app_id: '133718410632322'
   },
   API: {
     endpoints: [

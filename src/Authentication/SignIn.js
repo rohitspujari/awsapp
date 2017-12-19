@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react';
 import { Auth } from 'aws-amplify';
 import { AmplifyTheme } from 'aws-amplify-react';
+import aws_config from '../aws_config';
 
 import React, { Component } from 'react';
 import * as actions from '../actions';
@@ -22,11 +23,11 @@ import { Authenticator } from 'aws-amplify-react/dist/Auth';
 import { withFederated } from 'aws-amplify-react';
 import _ from 'lodash';
 
-const federated = {
-  google_client_id:
-    '277830869306-6qj1p3mep3utio2c9a3lgudfgga9sd2j.apps.googleusercontent.com',
-  facebook_app_id: ''
-};
+// const federated = {
+//   google_client_id:
+//     '277830869306-6qj1p3mep3utio2c9a3lgudfgga9sd2j.apps.googleusercontent.com',
+//   facebook_app_id: '133718410632322'
+// };
 
 const MySectionHeader = Object.assign({}, AmplifyTheme.container, {
   textAlign: 'left'
@@ -131,6 +132,7 @@ class SignIn extends Component {
         theme={MyTheme}
         hideDefault={true}
         onStateChange={this.handleAuthStateChange}
+        // federated={aws_config.federated}
       >
         <Grid>
           <Grid.Row centered>
@@ -172,7 +174,7 @@ class SignIn extends Component {
                   </Form.Field>
                   <Divider />
                   <Form.Field>
-                    <Federated federated={federated} />
+                    <Federated federated={aws_config.federated} />
                   </Form.Field>
                 </Form>
               </Segment>

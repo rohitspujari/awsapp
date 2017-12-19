@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Menu, Container } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 
