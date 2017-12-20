@@ -10,7 +10,7 @@ import {
   Input,
   Header
 } from 'semantic-ui-react';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import { AmplifyTheme } from 'aws-amplify-react';
 import aws_config from '../aws_config';
 
@@ -22,12 +22,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { Authenticator } from 'aws-amplify-react/dist/Auth';
 import { withFederated } from 'aws-amplify-react';
 import _ from 'lodash';
-
-// const federated = {
-//   google_client_id:
-//     '277830869306-6qj1p3mep3utio2c9a3lgudfgga9sd2j.apps.googleusercontent.com',
-//   facebook_app_id: '133718410632322'
-// };
 
 const MySectionHeader = Object.assign({}, AmplifyTheme.container, {
   textAlign: 'left'
@@ -94,6 +88,9 @@ class SignIn extends Component {
     const { username, password } = this.state;
     try {
       await Auth.signIn(username, password);
+
+      //const creds = await Auth.currentCredentials();
+      //console.log('creds', creds);
     } catch (err) {
       let error = err;
       if (err.code) {
@@ -103,10 +100,13 @@ class SignIn extends Component {
     }
   };
 
-  handleAuthStateChange = (state, data) => {
+  handleAuthStateChange = async (state, data) => {
     const { history } = this.props;
     if (state === 'signedIn') {
+      //Change redux state
       this.props.signedIn(data);
+      //const creds = await Auth.currentCredentials();
+      //console.log(creds);
 
       //Get Requested URI - Useful when used with require_authentication HOC
       if (history.location.state) {
@@ -115,13 +115,24 @@ class SignIn extends Component {
       } else {
         history.push('/');
       }
+
+      //Write to dynamo
+      const { username, email, name } = await Auth.currentAuthenticatedUser();
+      await API.post('rAPI', '/dev/api/user', {
+        body: {
+          username,
+          email,
+          name
+        },
+        headers: {}
+      });
     }
     if (state === 'signIn') {
       this.props.signOut();
       this.props.history.push('/signin');
     }
 
-    console.log('handleAuthStateChange', state, data);
+    //console.log('handleAuthStateChange', state, data);
   };
 
   getForm = () => {
@@ -199,7 +210,7 @@ class SignIn extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log(state);
+  //console.log(state);
   return {
     auth: state.auth
   };

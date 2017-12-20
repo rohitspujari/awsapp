@@ -14,8 +14,13 @@ const awsconfig = {
   API: {
     endpoints: [
       {
+        // the name must exactly match the name of API in API Gateway
         name: 'Friends',
         endpoint: 'https://2lu91un42e.execute-api.us-east-1.amazonaws.com'
+      },
+      {
+        name: 'rAPI',
+        endpoint: 'https://jtwcjre89i.execute-api.us-east-1.amazonaws.com'
       }
     ]
   }

@@ -19,10 +19,21 @@ export class Resource extends Component {
     console.log('I am clicked');
     console.log(Auth);
 
+    //Add new seesion to dynamo
     Auth.currentAuthenticatedUser().then(d => console.log('tesing', d));
-    const data = this.getData()
-      .then(data => console.log(data))
-      .catch(e => console.log(e));
+    //await Auth.currentCredentials();
+    API.post('rAPI', '/dev/api/user', { body: {}, headers: {} }).then(data =>
+      console.log(data)
+    );
+
+    // API.post('Friends', '/dev/api/friends', { body: {}, headers: {} }).then(
+    //   data => console.log(data)
+    // );
+
+    //Auth.currentAuthenticatedUser().then(d => console.log('tesing', d));
+    // const data = this.getData()
+    //   .then(data => console.log(data))
+    //   .catch(e => console.log(e));
   };
 
   getData = async () => {

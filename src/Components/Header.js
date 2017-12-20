@@ -49,10 +49,10 @@ class Header extends Component {
     const { activeItem } = this.state;
 
     return (
-      <Container>
-        <Menu pointing secondary>
+      <Container mobile="10">
+        <Menu secondary pointing>
           <Menu.Item
-            name="home"
+            name="Home"
             active={activeItem === 'home'}
             onClick={() => {
               this.props.history.push('/');
@@ -60,7 +60,7 @@ class Header extends Component {
             }}
           />
           <Menu.Item
-            name="Resource"
+            name="Resources"
             active={activeItem === 'resource'}
             onClick={() => {
               this.props.history.push('/resource');
@@ -80,7 +80,7 @@ class Header extends Component {
             <Menu.Item>
               {this.props.auth
                 ? this.props.auth.name || this.props.auth.username
-                : null}
+                : 'Guest'}
             </Menu.Item>
             {this.AuthButton(activeItem)}
           </Menu.Menu>
