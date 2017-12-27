@@ -11,6 +11,7 @@ import Resource from './Components/Resource';
 import RequireAuth from './Authentication/require_authentication';
 import Home from './Components/Home';
 import { Container } from 'semantic-ui-react';
+import Files from './Pages/Files';
 
 amplify.configure(awsconfig);
 
@@ -29,6 +30,7 @@ class App extends Component {
             <Route exact path="/friends" component={RequireAuth(Friends)} />
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/files" component={RequireAuth(Files)} />
           </div>
         </BrowserRouter>
       </Container>

@@ -1,3 +1,4 @@
+import { Storage } from 'aws-amplify';
 const awsconfig = {
   Auth: {
     //r_awsapp_identity_pool
@@ -23,6 +24,9 @@ const awsconfig = {
         endpoint: 'https://jtwcjre89i.execute-api.us-east-1.amazonaws.com'
       }
     ]
+  },
+  Storage: {
+    bucket: 'storage.ruletheglobe.com'
   }
 };
 

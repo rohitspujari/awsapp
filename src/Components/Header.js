@@ -76,6 +76,14 @@ class Header extends Component {
               this.setState({ activeItem: 'friends' });
             }}
           />
+          <Menu.Item
+            name="files"
+            active={activeItem === 'files'}
+            onClick={() => {
+              this.props.history.push('/files');
+              this.setState({ activeItem: 'files' });
+            }}
+          />
           <Menu.Menu position="right">
             <Menu.Item>
               {this.props.auth
