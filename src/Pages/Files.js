@@ -6,12 +6,12 @@ class Files extends Component {
   state = {
     files: [],
     isUploading: false,
-    filesUploaded: 0
+    filesProcessed: 0
   };
 
   handleUploadClick = () => {
-    const { files, filesUploaded } = this.state;
-    this.setState({ isUploading: true, filesUploaded: 0 });
+    const { files, filesProcessed } = this.state;
+    this.setState({ isUploading: true, filesProcessed: 0 });
     if (files.length > 0) {
       files.forEach(f => {
         const r = new FileReader();
@@ -23,24 +23,34 @@ class Files extends Component {
             contentType: f.type
           })
             .then(result => {
-              // checking if all the files are uploaded
-              if (this.state.filesUploaded === files.length - 1) {
-                this.setState({
-                  isUploading: false
-                });
-              }
-              this.setState({ filesUploaded: this.state.filesUploaded + 1 });
-              // Add File Names to elastic search
-              //console.log(result);
+              //upload status of the file
+              f.statusColor = 'olive';
+
+              //update state
+              this.setState({
+                filesProcessed: this.state.filesProcessed + 1,
+                files,
+                isUploading: this.state.filesProcessed !== files.length - 1
+              });
             })
-            .catch(err => alert(err));
+            .catch(err => {
+              //upload status of the file
+              f.statusColor = 'red';
+
+              //update state
+              this.setState({
+                filesProcessed: this.state.filesProcessed + 1,
+                files,
+                isUploading: this.state.filesProcessed !== files.length - 1
+              });
+            });
         };
         r.readAsArrayBuffer(f);
       });
     }
   };
   render() {
-    const { files, isUploading, filesUploaded } = this.state;
+    const { files, isUploading, filesProcessed } = this.state;
     return (
       <Container style={{ marginTop: 25 }}>
         <Segment>
@@ -68,7 +78,7 @@ class Files extends Component {
         {files.length > 1 &&
           files.map(i => (
             <Label
-              color={filesUploaded === files.length ? 'olive' : ''}
+              color={i.statusColor} //{filesProcessed === files.length ? 'olive' : ''}
               style={{ marginBottom: 3 }}
               key={i.lastModified}
             >
