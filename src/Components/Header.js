@@ -49,8 +49,8 @@ class Header extends Component {
     const { activeItem } = this.state;
 
     return (
-      <Container mobile="10">
-        <Menu secondary pointing>
+      <Container>
+        <Menu secondary pointing stackable>
           <Menu.Item
             name="Home"
             active={activeItem === 'home'}

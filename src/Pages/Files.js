@@ -47,6 +47,7 @@ class Files extends Component {
           <h5>Upload Files to S3:</h5>
           <Input
             style={{ marginBottom: 5 }}
+            fluid
             multiple
             type="file"
             onChange={e => {
@@ -57,7 +58,7 @@ class Files extends Component {
             loading={isUploading}
             disabled={isUploading || files.length === 0}
             onClick={this.handleUploadClick}
-            style={{ marginLeft: 5 }}
+            // floated="right"
           >
             <i class="cloud upload icon" />
             Upload
@@ -67,7 +68,7 @@ class Files extends Component {
         {files.length > 1 &&
           files.map(i => (
             <Label
-              color={filesUploaded === files.length ? 'olive' : 'gray'}
+              color={filesUploaded === files.length ? 'olive' : ''}
               style={{ marginBottom: 3 }}
               key={i.lastModified}
             >
