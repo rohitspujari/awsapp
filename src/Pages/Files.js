@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-import { Input, Container, Label, Button, Segment } from 'semantic-ui-react';
-import { Storage } from 'aws-amplify';
+import {
+  Input,
+  Container,
+  Label,
+  Button,
+  Segment,
+  Icon
+} from 'semantic-ui-react';
+import { Storage, API } from 'aws-amplify';
 
 class Files extends Component {
   state = {
     files: [],
     isUploading: false,
-    filesProcessed: 0
+    filesProcessed: 0,
+    videoLink: 'https://www.youtube.com/watch?v=ndj9CppYvv8'
   };
 
   handleUploadClick = () => {
@@ -49,12 +57,48 @@ class Files extends Component {
       });
     }
   };
+
+  getUploadLink = () => {
+    return (
+      <Segment>
+        <h5>Upload Youtube Video:</h5>
+
+        <Input
+          iconPosition="left"
+          fluid
+          type="text"
+          placeholder="youtube video link"
+        >
+          <Icon name="file video outline" />
+          <input
+            type="text"
+            value={this.state.videoLink}
+            onChange={e => this.setState({ videoLink: e.target.value })}
+          />
+          <Button
+            type="submit"
+            onClick={() => {
+              console.log(this.state.videoLink);
+              API.post('rAPI', '/dev/api/video', {
+                body: { link: this.state.videoLink },
+                headers: {}
+              }).then(data => console.log(data));
+            }}
+          >
+            <i class="cloud upload icon" />
+            Upload
+          </Button>
+        </Input>
+      </Segment>
+    );
+  };
+
   render() {
     const { files, isUploading, filesProcessed } = this.state;
     return (
       <Container style={{ marginTop: 25 }}>
         <Segment>
-          <h5>Upload Files to S3:</h5>
+          <h5>Upload Files:</h5>
           <Input
             style={{ marginBottom: 5 }}
             fluid
@@ -73,18 +117,20 @@ class Files extends Component {
             <i class="cloud upload icon" />
             Upload
           </Button>
+          <div style={{ marginTop: 5 }}>
+            {files.length > 1 &&
+              files.map(i => (
+                <Label
+                  color={i.statusColor} //{filesProcessed === files.length ? 'olive' : ''}
+                  style={{ marginBottom: 3 }}
+                  key={i.lastModified}
+                >
+                  {i.name}
+                </Label>
+              ))}
+          </div>
         </Segment>
-
-        {files.length > 1 &&
-          files.map(i => (
-            <Label
-              color={i.statusColor} //{filesProcessed === files.length ? 'olive' : ''}
-              style={{ marginBottom: 3 }}
-              key={i.lastModified}
-            >
-              {i.name}
-            </Label>
-          ))}
+        {this.getUploadLink()}
       </Container>
     );
   }

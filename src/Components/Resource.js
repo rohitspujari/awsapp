@@ -22,7 +22,7 @@ export class Resource extends Component {
     //Add new seesion to dynamo
     Auth.currentAuthenticatedUser().then(d => console.log('tesing', d));
     //await Auth.currentCredentials();
-    API.post('rAPI', '/dev/api/user', { body: {}, headers: {} }).then(data =>
+    API.post('rAPI', '/dev/api/video', { body: {}, headers: {} }).then(data =>
       console.log(data)
     );
 
