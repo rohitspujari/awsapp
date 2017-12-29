@@ -4,9 +4,11 @@ var youtubedl = require('youtube-dl');
 
 exports.handler = (event, context, callback) => {
   // TODO implement
+  var { link } = event['body-json'];
 
   var video = youtubedl(
-    event['body-json'].link
+    link
+    //'http://www.youtube.com/watch?v=90AiXO1pAiA'
     // Optional arguments passed to youtube-dl.
     //['--format=18']
     // Additional options can be given for calling `child_process.execFile()`.

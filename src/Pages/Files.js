@@ -14,7 +14,7 @@ class Files extends Component {
     files: [],
     isUploading: false,
     filesProcessed: 0,
-    videoLink: 'https://www.youtube.com/watch?v=ndj9CppYvv8'
+    videoLink: ''
   };
 
   handleUploadClick = () => {

@@ -1,14 +1,15 @@
 {
-  "name": "upload-youtube-video",
+  "name": "youtube_download",
   "version": "1.0.0",
-  "description": "This function downloads youtube video from url, and uploads it to s3 bucket",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Rohit Pujari",
-  "license": "MIT",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.175.0",
     "youtube-dl": "^1.12.2"
   }
 }
