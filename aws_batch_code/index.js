@@ -1,6 +1,7 @@
-var fs = require('fs');
-var AWS = require('aws-sdk');
-var youtubedl = require('youtube-dl');
+const fs = require('fs');
+const AWS = require('aws-sdk');
+const youtubedl = require('youtube-dl');
+const accessKeys = require('/Users/ropujari/aws/accessKeys.json');
 
 //Reference:
 //http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3/ManagedUpload.html#constructor-property
@@ -9,10 +10,7 @@ const url = process.argv[2]; //'https://www.youtube.com/watch?v=OSBl32lNGBg';
 const bucket = process.argv[3]; //'deletebucket-today';
 var video = youtubedl(url);
 
-AWS.config.update({
-  accessKeyId: 'AKIAIQHES5765PPRK7CA',
-  secretAccessKey: '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'
-});
+AWS.config.update(accessKeys);
 const metadata = {};
 
 //Will be called when the download starts.
