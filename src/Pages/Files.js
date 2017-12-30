@@ -5,7 +5,8 @@ import {
   Label,
   Button,
   Segment,
-  Icon
+  Icon,
+  Header
 } from 'semantic-ui-react';
 import { Storage, API } from 'aws-amplify';
 
@@ -14,11 +15,12 @@ class Files extends Component {
     files: [],
     isUploading: false,
     filesProcessed: 0,
-    videoLink: ''
+    videoLink: '',
+    batchJobId: null
   };
 
   handleUploadClick = () => {
-    const { files, filesProcessed } = this.state;
+    const { files } = this.state;
     this.setState({ isUploading: true, filesProcessed: 0 });
     if (files.length > 0) {
       files.forEach(f => {
@@ -79,22 +81,33 @@ class Files extends Component {
             type="submit"
             onClick={() => {
               console.log(this.state.videoLink);
+              this.setState({ batchJobId: null });
               API.post('rAPI', '/dev/api/video', {
                 body: { link: this.state.videoLink },
                 headers: {}
-              }).then(data => console.log(data));
+              })
+                .then(result => {
+                  this.setState({ batchJobId: result.jobId });
+                })
+                .catch(e => console.log(e));
+              //submitAWSBatchJob();
             }}
           >
             <i class="cloud upload icon" />
             Upload
           </Button>
         </Input>
+        {this.state.batchJobId ? (
+          <Header as="h6">JobID: {this.state.batchJobId}</Header>
+        ) : (
+          <Header as="h6" />
+        )}
       </Segment>
     );
   };
 
   render() {
-    const { files, isUploading, filesProcessed } = this.state;
+    const { files, isUploading } = this.state;
     return (
       <Container style={{ marginTop: 25 }}>
         <Segment>

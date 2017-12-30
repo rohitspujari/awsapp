@@ -6,7 +6,6 @@ import {
   Icon,
   Grid,
   Label,
-  Container,
   Input,
   Header
 } from 'semantic-ui-react';
@@ -126,13 +125,14 @@ class SignIn extends Component {
         },
         headers: {}
       });
+      //console.log(result);
     }
     if (state === 'signIn') {
       this.props.signOut();
       this.props.history.push('/signin');
     }
 
-    //console.log('handleAuthStateChange', state, data);
+    console.log('handleAuthStateChange', state, data, Auth);
   };
 
   getForm = () => {
