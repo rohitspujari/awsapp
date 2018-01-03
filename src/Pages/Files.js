@@ -87,6 +87,7 @@ class Files extends Component {
                 headers: {}
               })
                 .then(result => {
+                  console.log(result);
                   this.setState({ batchJobId: result.jobId });
                 })
                 .catch(e => console.log(e));
