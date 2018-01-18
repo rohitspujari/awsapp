@@ -25,7 +25,7 @@ class App extends Component {
         <BrowserRouter>
           <div>
             <Header />
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" component={RequireAuth(Files)} />
             <Route exact path="/resource" component={Resource} />
             <Route exact path="/friends" component={RequireAuth(Friends)} />
             <Route exact path="/signin" component={SignIn} />

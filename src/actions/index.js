@@ -92,3 +92,12 @@ export const authError = error => dispatch => {
     payload: error
   });
 };
+
+// export const action = function(error) {
+//   return function(dispatch) {
+//     dispatch({
+//       type: ACTION_TYPE,
+//       payload: 'foo'
+//     });
+//   };
+// };

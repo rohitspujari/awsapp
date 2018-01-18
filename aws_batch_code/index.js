@@ -12,8 +12,11 @@ const mediaConvertParams = require('./mediaconvert_params_template.json');
 //const accessKeys = require('/Users/ropujari/aws/accessKeys.json'); // For Testing only
 //AWS.config.update(accessKeys); For Testing only
 
-//Reference:
-//http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3/ManagedUpload.html#constructor-property
+// Reference:
+// http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3/ManagedUpload.html#constructor-property
+
+// Incoming Command
+// node /opt/upload_video/index.js https://www.youtube.com/watch?v=YNDwEzNYn_g storage.ruletheglobe.com/private/us-east-1:fd032985-afc3-4746-999d-106d082dcf56
 
 const url = process.argv[2]; //'https://www.youtube.com/watch?v=OSBl32lNGBg';
 const bucket = process.argv[3]; //'deletebucket-today'; storage.ruletheglobe.com/private/'+cognitoID
@@ -57,7 +60,12 @@ const uploadToS3Multipart = (data, filename, bucket) => {
     if (err) {
       console.log('Error:', err.code, err.message);
     } else {
-      console.log('Upload Result', data);
+      //console.log('Upload result', data);
+      /* data
+        Location: 'https://s3.amazonaws.com/storage.ruletheglobe.com/private/us-east-1%3Afd032985-afc3-4746-999d-106d082dcf56/Chronixx_-_Likes_Official_Music_Video_Chronology_OUT_NOW-6Wq_K61Mh1A.mp4',
+        Bucket: 'storage.ruletheglobe.com',
+        Key: 'private/us-east-1:fd032985-afc3-4746-999d-106d082dcf56/Chronixx_-_Likes_Official_Music_Video_Chronology_OUT_NOW-6Wq_K61Mh1A.mp4'
+      */
       console.log('Successfully uploaded video.');
       //Start media convertion from .mp4 to AWS Recognition compatible format MPEG-4 or Mov with H.264 codec
       mediaConvert(jobId, filename, bucket, data.Key, data.Bucket);
@@ -122,10 +130,9 @@ const mediaConvert = (jobId, filename, bucket_path, key, bucket) => {
       .FileGroupSettings.Destination
   );
 
-  mediaconvert.createJob(mediaConvertParams, function(err, result) {
+  mediaconvert.createJob(mediaConvertParams, (err, result) => {
     if (err) console.log(err, err.stack);
     else {
-      console.log(Object.keys(result.Job));
       updateTable(
         jobId,
         result.Job.Id,

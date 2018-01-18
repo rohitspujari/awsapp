@@ -59,7 +59,7 @@ class Header extends Component {
               this.setState({ activeItem: 'home' });
             }}
           />
-          <Menu.Item
+          {/* <Menu.Item
             name="Resources"
             active={activeItem === 'resource'}
             onClick={() => {
@@ -83,7 +83,7 @@ class Header extends Component {
               this.props.history.push('/files');
               this.setState({ activeItem: 'files' });
             }}
-          />
+          /> */}
           <Menu.Menu position="right">
             <Menu.Item>
               {this.props.auth
