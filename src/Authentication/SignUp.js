@@ -177,7 +177,7 @@ class SignUp extends Component {
       <div style={{ marginTop: 25 }}>
         <Header as="h2" icon textAlign="center">
           <Icon name="users" circular />
-          <Header.Content>RLabs</Header.Content>
+          <Header.Content>eGlue</Header.Content>
         </Header>
         {this.getForm()}
       </div>
